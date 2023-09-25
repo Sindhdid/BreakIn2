@@ -7,7 +7,7 @@ local energynochange = false
 local toc = {}
 
 local lib = loadstring(game:HttpGet("https://pastebin.com/raw/A2Wf3WVh"))()
-lib.makelib("Break In 2 (BY JAMAL ON DISCORD)")
+lib.makelib("Break In 2 BY JAMAL ON DISCORD")
 local maintab = lib.maketab("Main")
 local lobbytab = lib.maketab("Lobby")
 
