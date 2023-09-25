@@ -1,0 +1,168 @@
+--https://www.roblox.com/games/13864661000/Break-In-2-Story
+
+local localplr = game.Players.LocalPlayer
+local localname = localplr.Name
+local killbadguys = false
+local energynochange = false
+local toc = {}
+
+local lib = loadstring(game:HttpGet("https://pastebin.com/raw/A2Wf3WVh"))()
+lib.makelib("Break In 2 (BY JAMAL ON DISCORD)")
+local maintab = lib.maketab("Main")
+local lobbytab = lib.maketab("Lobby")
+
+lib.ondestroyedfunc = function()
+    killbadguys = false
+    energynochange = false
+    for i,v in pairs(toc) do
+        v:Disconnect()
+    end
+end
+
+--------------https://v3rmillion.net/showthread.php?tid=1090447---------
+local BlockedRemotes = {
+    "IceSlip",
+    "Energy"
+}
+local Events = {
+    Fire = true, 
+    Invoke = true, 
+    FireServer = true, 
+    InvokeServer = true,
+}
+
+local gameMeta = getrawmetatable(game)
+local psuedoEnv = {
+    ["__index"] = gameMeta.__index,
+    ["__namecall"] = gameMeta.__namecall;
+}
+setreadonly(gameMeta, false)
+gameMeta.__index, gameMeta.__namecall = newcclosure(function(self, index, ...)
+    if Events[index] then
+        for i,v in pairs(BlockedRemotes) do
+            if v == self.Name and not checkcaller() and energynochange then return nil end
+        end
+    end
+    return psuedoEnv.__index(self, index, ...)
+end)
+--------------https://v3rmillion.net/showthread.php?tid=1090447---------
+function dobadguy(badguy)
+    if not badguy then return nil end
+    repeat
+        wait()
+        game.ReplicatedStorage.Events.HitBadguy:FireServer(badguy,10)
+        game.ReplicatedStorage.Events.HitBadguy:FireServer(badguy,996)
+        game.ReplicatedStorage.Events.HitBadguy:FireServer(badguy,9)
+        game.ReplicatedStorage.Events.HitBadguy:FireServer(badguy,8)
+        game.ReplicatedStorage.Events.HitBadguy:FireServer(badguy,996)
+    until not badguy or not badguy.Parent
+end
+
+lib.makebutton("Unlock Secret Ending",maintab,function()
+    game.ReplicatedStorage.Events.LarryEndingEvent:FireServer("CrowbarCollected")
+    game.ReplicatedStorage.Events.LarryEndingEvent:FireServer("HatCollected",true)
+    game.ReplicatedStorage.Events.LarryEndingEvent:FireServer("MaskCollected")
+end)
+
+lib.makelabel("Food",maintab)
+local food = {"Apple","Cookie","Chips","Pizza","Lollipop","GoldenApple","GoldPizza","RainbowPizza","RainbowPizzaBox"}
+
+for i,v in pairs(food) do
+    lib.makebutton("Get "..v,maintab,function()
+        if v ~= "GoldenApple" and v ~= "RainbowPizzaBox" then
+            game.ReplicatedStorage.Events.GiveTool:FireServer(v)
+        else
+            game.ReplicatedStorage.Events.Vending:FireServer(3,v,"Food",localname,1)
+        end
+    end)
+end
+
+lib.makelabel("Drinks",maintab)
+local drinks = {"BloxyCola","ExpiredBloxyCola","Bottle","Battery"}
+
+for i,v in pairs(drinks) do
+    lib.makebutton("Get "..v,maintab,function()
+        game.ReplicatedStorage.Events.GiveTool:FireServer(v)
+    end)
+end
+
+lib.makelabel("Weapons",maintab)
+local weapons = {"Crowbar1","Crowbar2","Bat","Pitchfork","Hammer","Wrench","Broom"}
+
+for i,v in pairs(weapons) do
+    lib.makebutton("Get "..v,maintab,function()
+        game.ReplicatedStorage.Events.Vending:FireServer(3,v,"Weapons",localname,1)
+    end)
+end
+
+lib.makelabel("Other",maintab)
+
+lib.maketoggle("Energy Doesn't Change",maintab,function(bool)
+    energynochange = bool
+end)
+
+lib.maketoggle("Phone Gui",maintab,function(bool)
+    localplr.PlayerGui.Phone.Phone.Phone.Background.Visible = bool
+end)
+
+lib.makebutton("Get Golden Armor (only 1)",maintab,function()
+    game.ReplicatedStorage.Events.Vending:FireServer(1,"Armor",localname,150)
+    game.ReplicatedStorage.Events.Vending:FireServer(3,"Armor2","Armor",localname,1)
+end)
+
+lib.makebutton("Get Medkit",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("MedKit")
+end)
+
+lib.makebutton("Get Louise",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("Louise")
+end)
+
+lib.makebutton("Get Phone",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("Phone")
+end)
+
+lib.makebutton("Get Ladder",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("Ladder")
+end)
+
+lib.makebutton("Get Key For Uncle Pete",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("Key")
+end)
+
+lib.makebutton("Get Gold Key For Rainbow Pizza",maintab,function()
+    game.ReplicatedStorage.Events.GiveTool:FireServer("GoldKey")
+end)
+
+lib.maketoggle("Auto Kill Bad Guys",maintab,function(bool)
+    killbadguys = bool
+end)
+
+for i,v in pairs(workspace:GetChildren()) do
+    if v.Name == "BadGuys" or v.Name == "BadGuysFront" or v.Name == "BadGuysBoss" then
+        table.insert(toc,v.ChildAdded:Connect(function(badguy)
+            if killbadguys then
+                print(badguy)
+                dobadguy(badguy)
+            end
+        end))
+    end
+end
+if workspace:FindFirstChild("PizzaBossAlec") then
+    dobadguy(workspace.PizzaBossAlec:FindFirstChild("BadGuyPizza"))
+end
+
+table.insert(toc,workspace.ChildAdded:Connect(function(badguy)
+    if badguy.Name == "BadGuyBrute" then
+        dobadguy(badguy)
+    end
+end))
+
+
+lib.makebutton("Get Hacker Role",lobbytab,function()
+    game:GetService("ReplicatedStorage").RemoteEvents.OutsideRole:FireServer("Phone",true,false)
+end)
+
+lib.makebutton("Get Nerd Role",lobbytab,function()
+    game:GetService("ReplicatedStorage").RemoteEvents.OutsideRole:FireServer("Book",true,false)
+end
